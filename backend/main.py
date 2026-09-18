@@ -41,3 +41,18 @@ def top_tracks(country: str = "TR", limit: int = 10):
 
     result = latest[["daily_rank", "name", "artists", "popularity"]].to_dict(orient="records")
     return {"country": country, "date": latest_date, "tracks": result}
+@app.get("/top-artists")
+def top_artists(country: str = "TR", limit: int = 10):
+    filtered = df[df["country"] == country].copy()
+    filtered["artists"] = filtered["artists"].astype(str)
+    artist_counts = filtered["artists"].value_counts().head(limit)
+    result = [{"artist": artist, "count": int(count)} for artist, count in artist_counts.items()]
+    return {"country": country, "artists": result}
+
+@app.get("/popularity-trend")
+def popularity_trend(country: str = "TR"):
+    filtered = df[df["country"] == country].copy()
+    trend = filtered.groupby("snapshot_date")["popularity"].mean().reset_index()
+    trend = trend.sort_values("snapshot_date")
+    result = [{"date": row["snapshot_date"], "avg_popularity": round(row["popularity"], 2)} for _, row in trend.iterrows()]
+    return {"country": country, "trend": result}
