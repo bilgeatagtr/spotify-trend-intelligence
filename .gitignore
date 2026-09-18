@@ -9,3 +9,6 @@ frontend/dist/
 
 # Editor
 .vscode/
+
+# Data
+data/*.csv
