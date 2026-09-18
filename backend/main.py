@@ -1,10 +1,15 @@
+import os
+from io import BytesIO
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+from azure.storage.blob import BlobServiceClient
+from dotenv import load_dotenv
 import pandas as pd
+
+load_dotenv()
 
 app = FastAPI()
 
-# Frontend'in (localhost:5173) backend'e istek atabilmesi için CORS izni
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["http://localhost:5173"],
@@ -12,8 +17,16 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# CSV'yi uygulama başlarken bir kere hafızaya yükle
-df = pd.read_csv("../data/universal_top_spotify_songs.csv")
+# Azure Blob Storage'dan CSV'yi indir ve hafızaya yükle
+connection_string = os.getenv("AZURE_STORAGE_CONNECTION_STRING")
+blob_service_client = BlobServiceClient.from_connection_string(connection_string)
+container_client = blob_service_client.get_container_client("spotify-data")
+blob_client = container_client.get_blob_client("universal_top_spotify_songs.csv")
+
+print("Azure'dan veri indiriliyor...")
+blob_data = blob_client.download_blob().readall()
+df = pd.read_csv(BytesIO(blob_data))
+print("Veri yüklendi:", len(df), "satır")
 
 @app.get("/")
 def root():

@@ -12,3 +12,6 @@ frontend/dist/
 
 # Data
 data/*.csv
+
+# Secrets
+backend/.env
