@@ -21,7 +21,7 @@ app.add_middleware(
 connection_string = os.getenv("AZURE_STORAGE_CONNECTION_STRING")
 blob_service_client = BlobServiceClient.from_connection_string(connection_string)
 container_client = blob_service_client.get_container_client("spotify-data")
-blob_client = container_client.get_blob_client("universal_top_spotify_songs.csv")
+blob_client = container_client.get_blob_client("tr_top_spotify_songs.csv")
 
 print("Azure'dan veri indiriliyor...")
 blob_data = blob_client.download_blob().readall()
