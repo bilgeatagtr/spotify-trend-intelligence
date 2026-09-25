@@ -33,15 +33,15 @@ function App() {
   const [trend, setTrend] = useState<TrendPoint[]>([]);
 
   useEffect(() => {
-    fetch("https://spotify-trend-api-bilge-ddgaemf0drhnd6g7.northcentralus-01.azurewebsites.net/top-tracks?country=TR")
+    fetch("https://spotify-trend-intelligence.onrender.com/top-tracks?country=TR")
       .then((res) => res.json())
       .then((json) => setData(json));
 
-    fetch("https://spotify-trend-api-bilge-ddgaemf0drhnd6g7.northcentralus-01.azurewebsites.net/top-artists?country=TR")
+    fetch("https://spotify-trend-intelligence.onrender.com/top-artists?country=TR")
       .then((res) => res.json())
       .then((json) => setArtists(json.artists));
 
-    fetch("https://spotify-trend-api-bilge-ddgaemf0drhnd6g7.northcentralus-01.azurewebsites.net/popularity-trend?country=TR")
+    fetch("https://spotify-trend-intelligence.onrender.com/popularity-trend?country=TR")
       .then((res) => res.json())
       .then((json) => setTrend(json.trend));
   }, []);
@@ -85,3 +85,4 @@ function App() {
 }
 
 export default App;
+
